@@ -253,6 +253,7 @@ export const ManProvider = ({ children }) => {
   const scrollRef = useRef(null);
   const [reload, setReload] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -311,6 +312,8 @@ export const ManProvider = ({ children }) => {
     } else {
       setSelectedAgent(agent);
     }
+
+    setIsExpanded(false)
   };
 
   const handleSubmit = async (e) => {
@@ -479,6 +482,8 @@ export const ManProvider = ({ children }) => {
         reload,
         setReload,
         limparStorage,
+        isExpanded,
+        setIsExpanded
       }}
     >
       {children}

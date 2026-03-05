@@ -77,6 +77,43 @@
     border-radius: 2px;
   }
 
+  .mobileMenuAgent {
+    position: relative;
+  }
+
+  .hamburgerAgent {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+    color: #006FFF;
+    font-weight: 800;
+    transition: all 1s ease;
+  }
+
+  .hamburgerAgent-abrir {
+    align-items: end;
+  }
+
+  .span1 {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: #006FFF;
+    border-radius: 2px;
+  }
+
+  .span2 {
+    display: block;
+    width: 15px;
+    height: 3px;
+    background: #006FFF;
+    border-radius: 2px;
+  }
+
   .dropdown {
     position: absolute;
     box-sizing: border-box;

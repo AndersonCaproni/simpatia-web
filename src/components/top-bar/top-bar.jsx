@@ -5,12 +5,14 @@ import Button from "../button";
 import styles from "./top-bar.module.css";
 import ModuleIA from "../modules-ia/modules-ia";
 import { useNavigate } from "react-router-dom";
+import { useMan } from "../../hooks/man-provider";
 
 const TopBar = () => {
   const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const { isExpanded, setIsExpanded } = useMan();
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 950);
@@ -53,7 +55,7 @@ const TopBar = () => {
             <Button types="outline" onClick={() => window.open("https://simpatiaunifenas.web.app/about", "_blank")} >Sobre o Projeto</Button>
           </div>
           <Button types="top" onClick={() => window.open("https://www.unifenas.br/", "_blank")} className={styles.btn}>
-            
+
             <svg style={{ height: "20px", width: "20px" }} width="75" height="78" viewBox="0 0 75 78" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M58.4275 58.3493C58.2998 58.1508 58.2857 57.5871 58.0233 57.1758C54.0808 51.0351 50.2819 44.7739 46.0203 38.8495L46.0185 52.1448C46.0185 55.8404 43.3346 59.1896 41.9448 60.8347C32.5317 71.9921 12.812 67.0569 10.2381 52.4675L10.2168 23.7885L10.9294 22.7284L19.7824 17.9315V50.7267C19.7824 50.8685 20.5198 53.056 20.6687 53.3857C23.4519 59.615 32.7125 58.789 35.524 52.9922C37.3393 49.2447 36.4388 26.1936 36.4494 20.7407C37.6123 24.0912 43.9356 34.1554 46.0203 37.4278L46.022 21.4498C50.5425 29.6929 57.1688 39.0103 62.331 47.3314C63.5896 49.3629 65.334 52.0775 66.5891 54.0948C69.3545 58.5443 71.9639 63.125 74.7435 67.5674H64.6391C63.6995 66.3088 62.838 64.9793 61.98 63.6675C60.8206 61.8948 59.5727 60.115 58.4346 58.3493H58.4275Z" fill="#002861" />
               <path d="M42.3678 5.67268C40.9922 5.1125 38.4492 5.03675 36.985 5.17502C6.88433 8.01136 -6.52092 43.5294 14.4644 65.2664L13.5958 65.4189C8.67477 60.5545 4.28908 55.3109 2.04482 48.6136C-9.84653 13.1416 32.8014 -15.3849 60.913 9.24162C64.3627 12.2623 67.9614 16.7792 69.415 21.1223C63.4764 13.5351 55.8395 7.35545 46.0187 5.87701C46.0187 5.87701 46.0435 4.4553 46.0187 3.74976C46.0187 3.74976 43.6016 5.02741 42.3678 5.67268Z" fill="#4485DF" />
@@ -70,6 +72,16 @@ const TopBar = () => {
 
       {isMobile && (
         <>
+          <div className={styles.mobileMenuAgent}>
+            <button
+              ref={dropdownRef}
+              className={`${styles.hamburgerAgent} ${isExpanded ? styles["hamburgerAgent-abrir"] : ""}`}
+              onClick={() => setIsExpanded((prev) => !prev)}
+            >
+              <span className={styles.span1}></span>
+              <span className={styles.span2}></span>
+            </button>
+          </div>
           <img src={Logo} alt="Logo" className={styles.logo} onClick={() => window.open("https://simpatiaunifenas.web.app", "_blank")} />
           <div className={styles.mobileMenu}>
             <button

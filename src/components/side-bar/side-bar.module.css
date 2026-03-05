@@ -12,8 +12,10 @@
   overflow: hidden;
 }
 
-.sidebar:hover {
-  width: 550px;
+@media (hover: hover) and (pointer: fine) {
+  .sidebar:hover {
+    width: 550px;
+  }
 }
 
 .sidebar-header {
@@ -69,18 +71,27 @@
     bottom: 16px;
     position: absolute;
     max-height: calc(100dvh - 77px);
-    width: 52px;
+    width: 0px;
+    overflow: hidden;
+    border: none;
     z-index: 999;
     transition: width 0.3s ease;
   }
 
-  .sidebar:hover {
+  .sidebar-expanded {
     width: 300px;
+    border: solid 1px #e4e4f2;
+  }
+
+  .sidebar-not-expanded {
+    width: 0px;
+    overflow: hidden;
   }
 
   .sidebar-header {
     display: none;
   }
+  
 
   .sidebar-content {
     gap: 4px;
