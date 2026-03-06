@@ -6,8 +6,8 @@ import {
   User,
   ClipboardText,
   Checks,
-  Check,
-  ShieldCheck,
+  Microphone,
+  Stop,
 } from "phosphor-react";
 import { useMan } from "../../hooks/man-provider";
 import { formatDate } from "../../utils/format-date";
@@ -33,6 +33,10 @@ const ChatContainer = () => {
     reload,
     limparStorage,
     isMobile,
+    isRecording,
+    isTranscribing,
+    startRecording,
+    stopRecording,
   } = useMan();
 
   const Icon = selectedAgent?.icon;
@@ -195,12 +199,40 @@ const ChatContainer = () => {
                             }
                           }
                         }}
-                        placeholder={`Pergunte algo ao ${selectedAgent.name}...`}
+                        placeholder={
+                          isRecording
+                            ? "Ouvindo..."
+                            : isTranscribing
+                              ? "Transcrevendo..."
+                              : `Pergunte algo ao ${selectedAgent.name}...`
+                        }
                         rows={1}
-                        className={styles.textarea}
+                        disabled={isRecording || isTranscribing}
+                        className={`${styles.textarea} ${isRecording || isTranscribing ? styles.textareaDisabled : ""
+                          }`}
                       />
-                      {
-                        (isLoading || inputValue.trim()) &&
+
+                      {!inputValue.trim() && !isLoading && (
+                        <button
+                          type="button"
+                          onClick={isRecording ? stopRecording : startRecording}
+                          disabled={isTranscribing}
+                          className={`${styles.micBtn} ${isRecording ? styles.micBtnRecording : ""
+                            }`}
+                          title={isRecording ? "Parar gravação" : "Gravar áudio"}
+                        >
+                          {isTranscribing ? (
+                            <CircleNotch size={18} className={styles.spin} />
+                          ) : isRecording ? (
+                            <Stop size={18} weight="fill" />
+                          ) : (
+                            <Microphone size={18} weight="fill" />
+                          )}
+                          {isRecording && <span className={styles.pulseDot} />}
+                        </button>
+                      )}
+
+                      {(isLoading || inputValue.trim()) && (
                         <button type="submit" className={styles.submitBtn} disabled={isLoading || !inputValue.trim()}>
                           {isLoading ? (
                             <CircleNotch size={18} className={styles.spin} />
@@ -208,7 +240,7 @@ const ChatContainer = () => {
                             <PaperPlaneRight size={18} weight="fill" />
                           )}
                         </button>
-                      }
+                      )}
                     </div>
                     <p className={styles.disclaimer}>
                       O Ajuda AI pode cometer erros. Por isso, lembre-se de conferir as informações geradas.

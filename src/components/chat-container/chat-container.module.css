@@ -218,6 +218,62 @@
   cursor: not-allowed;
 }
 
+.micBtn {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  color: var(--neutro-600, #444);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.micBtn:hover:not(:disabled) {
+  background-color: #e0e0e0;
+  transform: scale(1.05);
+}
+
+.micBtn:disabled {
+  background-color: transparent;
+  color: var(--neutro-300, #ccc);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.micBtnRecording {
+  background-color: #ef4444;
+  color: white;
+  animation: micPulse 1.5s ease-in-out infinite;
+}
+
+.micBtnRecording:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.pulseDot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  border: 2px solid white;
+  animation: pulseDotAnim 1.2s ease-in-out infinite;
+}
+
+.textareaDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .disclaimer {
   text-align: center;
   font-size: 12px;
@@ -241,6 +297,16 @@
 
 .spinTop {
   animation: spinTop 1s linear infinite reverse;
+}
+
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+  50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+}
+
+@keyframes pulseDotAnim {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
 }
 
 .buttonTop {

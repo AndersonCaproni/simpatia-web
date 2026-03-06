@@ -18,7 +18,7 @@ import {
   Code,
   Leaf,
 } from "phosphor-react";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ChatMensagem } from "../services/ia";
 
 const ManContext = createContext();
@@ -254,6 +254,9 @@ export const ManProvider = ({ children }) => {
   const [reload, setReload] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 950);
@@ -316,17 +319,82 @@ export const ManProvider = ({ children }) => {
     setIsExpanded(false)
   };
 
-  const handleSubmit = async (e) => {
+  const transcriptRef = useRef("");
+
+  const startRecording = useCallback(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Seu navegador não suporta reconhecimento de voz. Use o Chrome ou Edge.");
+      return;
+    }
+
+    transcriptRef.current = "";
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "pt-BR";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.continuous = true;
+
+    recognition.onstart = () => {
+      setIsRecording(true);
+      setIsTranscribing(false);
+    };
+
+    recognition.onresult = (event) => {
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          transcriptRef.current += event.results[i][0].transcript + " ";
+        }
+      }
+      setInputValue(transcriptRef.current.trim());
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Erro no reconhecimento de voz:", event.error);
+      setIsRecording(false);
+      setIsTranscribing(false);
+    };
+
+    recognition.onend = () => {
+      const finalText = transcriptRef.current.trim();
+      setIsRecording(false);
+      setIsTranscribing(false);
+      recognitionRef.current = null;
+      if (finalText) {
+        setTimeout(() => {
+          const fakeEvent = { preventDefault: () => { } };
+          handleSubmitRef.current(fakeEvent, finalText);
+        }, 100);
+      }
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+  }, []);
+
+  const stopRecording = useCallback(() => {
+    setIsTranscribing(true);
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+  }, []);
+
+  const handleSubmitRef = useRef(null);
+
+  const handleSubmit = async (e, overrideValue) => {
     e.preventDefault();
     if (isLoading) return;
-    if (!selectedAgent || !inputValue.trim()) return;
+    const textToSend = overrideValue ?? inputValue;
+    if (!selectedAgent || !textToSend.trim()) return;
 
     const agentId = selectedAgent.id;
 
     const userMessage = {
       id: `user-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       type: "user",
-      content: inputValue.trim(),
+      content: textToSend.trim(),
       timestamp: new Date(),
     };
 
@@ -463,6 +531,10 @@ export const ManProvider = ({ children }) => {
     setStorage("agentsMessages", messagesData);
   }, [agents]);
 
+  useEffect(() => {
+    handleSubmitRef.current = handleSubmit;
+  });
+
   return (
     <ManContext.Provider
       value={{
@@ -483,7 +555,11 @@ export const ManProvider = ({ children }) => {
         setReload,
         limparStorage,
         isExpanded,
-        setIsExpanded
+        setIsExpanded,
+        isRecording,
+        isTranscribing,
+        startRecording,
+        stopRecording,
       }}
     >
       {children}
