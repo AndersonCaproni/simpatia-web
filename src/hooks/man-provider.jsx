@@ -320,6 +320,7 @@ export const ManProvider = ({ children }) => {
   };
 
   const transcriptRef = useRef("");
+  const submittedRef = useRef(false);
 
   const startRecording = useCallback(() => {
     const SpeechRecognition =
@@ -329,7 +330,9 @@ export const ManProvider = ({ children }) => {
       return;
     }
 
+    // Reseta estado a cada nova gravação
     transcriptRef.current = "";
+    submittedRef.current = false;
 
     const recognition = new SpeechRecognition();
     recognition.lang = "pt-BR";
@@ -342,31 +345,40 @@ export const ManProvider = ({ children }) => {
       setIsTranscribing(false);
     };
 
+    // Acumula resultados mas não exibe no input (evita botão de envio piscar)
     recognition.onresult = (event) => {
       for (let i = event.resultIndex; i < event.results.length; i++) {
         if (event.results[i].isFinal) {
           transcriptRef.current += event.results[i][0].transcript + " ";
         }
       }
-      setInputValue(transcriptRef.current.trim());
     };
 
     recognition.onerror = (event) => {
+      if (event.error === "no-speech") return; // silêncio prolongado — ignorar
       console.error("Erro no reconhecimento de voz:", event.error);
       setIsRecording(false);
       setIsTranscribing(false);
+      transcriptRef.current = "";
+      submittedRef.current = false;
     };
 
     recognition.onend = () => {
+      // Captura e limpa imediatamente — impede segundo onend de submeter de novo
       const finalText = transcriptRef.current.trim();
+      transcriptRef.current = "";
+
       setIsRecording(false);
       setIsTranscribing(false);
       recognitionRef.current = null;
-      if (finalText) {
+
+      // Guard: uma única submissão por sessão de gravação
+      if (finalText && !submittedRef.current) {
+        submittedRef.current = true;
         setTimeout(() => {
           const fakeEvent = { preventDefault: () => { } };
           handleSubmitRef.current(fakeEvent, finalText);
-        }, 100);
+        }, 50);
       }
     };
 
@@ -375,9 +387,10 @@ export const ManProvider = ({ children }) => {
   }, []);
 
   const stopRecording = useCallback(() => {
+    setIsRecording(false);
     setIsTranscribing(true);
     if (recognitionRef.current) {
-      recognitionRef.current.stop();
+      recognitionRef.current.stop(); // dispara onend
     }
   }, []);
 

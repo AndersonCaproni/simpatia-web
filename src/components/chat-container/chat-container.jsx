@@ -212,7 +212,8 @@ const ChatContainer = () => {
                           }`}
                       />
 
-                      {!inputValue.trim() && !isLoading && (
+                      {/* Botão de mic: aparece quando vazio OU quando está gravando/transcrevendo */}
+                      {(!inputValue.trim() || isRecording || isTranscribing) && !isLoading && (
                         <button
                           type="button"
                           onClick={isRecording ? stopRecording : startRecording}
@@ -232,7 +233,8 @@ const ChatContainer = () => {
                         </button>
                       )}
 
-                      {(isLoading || inputValue.trim()) && (
+                      {/* Botão de enviar: só aparece quando há texto E não está gravando */}
+                      {!isRecording && !isTranscribing && (isLoading || inputValue.trim()) && (
                         <button type="submit" className={styles.submitBtn} disabled={isLoading || !inputValue.trim()}>
                           {isLoading ? (
                             <CircleNotch size={18} className={styles.spin} />
