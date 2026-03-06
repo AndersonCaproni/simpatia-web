@@ -44,7 +44,8 @@ const ChatContainer = () => {
 
   useEffect(() => {
     if (inputValue === "" && textareaRef.current) {
-      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = "36px";
+      textareaRef.current.style.overflowY = "hidden";
     }
   }, [inputValue, textareaRef]);
 
@@ -160,7 +161,6 @@ const ChatContainer = () => {
                     <span></span>
                     <span></span>
                   </div>
-                  <span className={styles.loadingText}>Pensando...</span>
                 </div>
               )}
             </div>
