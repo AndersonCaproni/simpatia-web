@@ -1,9 +1,11 @@
 .container {
     background-color: #f1f1f1bd;
+  color: var(--neutro-600);
 }
 
 .container:hover {
     background-color: color-mix(in srgb, var(--agent-color, #f8f8fc) 15%, transparent);
+  color: var(--neutro-700);
 }
 
 .container.selected {
