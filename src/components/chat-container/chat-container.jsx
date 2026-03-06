@@ -37,6 +37,7 @@ const ChatContainer = () => {
     isTranscribing,
     startRecording,
     stopRecording,
+    isAtBottomRef,
   } = useMan();
 
   const Icon = selectedAgent?.icon;
@@ -98,7 +99,6 @@ const ChatContainer = () => {
           <div className={styles.messages} ref={scrollRef}>
             <div className={styles.messagesInner}>
               {selectedAgent.messages.map((msg) => {
-                const MessageIcon = msg.type === "user" ? User : Icon;
                 const isBot = msg.type === "bot";
 
                 return (
@@ -114,7 +114,7 @@ const ChatContainer = () => {
                     {isBot &&
                       selectedAgent?.messages[selectedAgent.messages.length - 1].id === msg.id &&
                       Date.now() - new Date(msg.timestamp).getTime() <= 5000 ? (
-                      <TypingMessage content={msg.content} scrollRef={scrollRef} />
+                      <TypingMessage content={msg.content} scrollRef={scrollRef} isAtBottomRef={isAtBottomRef} />
                     ) : isBot ? (
                       <div className={styles.markdownContainer}>
                         <ReactMarkdown

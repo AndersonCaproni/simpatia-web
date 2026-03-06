@@ -6,14 +6,15 @@ import rehypeKatex from "rehype-katex";
 import styles from "./_typing-message.module.css";
 import "katex/dist/katex.min.css";
 
-function TypingMessage({ content, speed = 15, onFinish, scrollRef }) {
+function TypingMessage({ content, speed = 0.4, onFinish, scrollRef, isAtBottomRef }) {
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
     let index = 0;
 
     const scrollToBottom = () => {
-      if (scrollRef?.current) {
+      // Só faz scroll automático se o usuário estiver no fundo
+      if (scrollRef?.current && isAtBottomRef?.current !== false) {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       }
     };
@@ -30,7 +31,7 @@ function TypingMessage({ content, speed = 15, onFinish, scrollRef }) {
     }, speed);
 
     return () => clearInterval(interval);
-  }, [content, speed, onFinish, scrollRef]);
+  }, [content, speed, onFinish, scrollRef, isAtBottomRef]);
 
   return (
     <div className={styles.markdownContainer}>

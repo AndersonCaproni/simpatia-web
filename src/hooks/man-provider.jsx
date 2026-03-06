@@ -402,6 +402,9 @@ export const ManProvider = ({ children }) => {
     const textToSend = overrideValue ?? inputValue;
     if (!selectedAgent || !textToSend.trim()) return;
 
+    // Força scroll ao fundo quando o usuario envia — mesmo que tenha voltado para ler historico
+    isAtBottomRef.current = true;
+
     const agentId = selectedAgent.id;
 
     const userMessage = {
@@ -507,8 +510,48 @@ export const ManProvider = ({ children }) => {
     textarea.style.overflowY = textarea.scrollHeight > maxHeight ? "auto" : "hidden";
   };
 
+  // Rastreia se o usuario esta proximo do fundo
+  const isAtBottomRef = useRef(true);
+
+  // Para auto-scroll imediatamente ao primeiro gesto de scroll do usuario
   useEffect(() => {
-    if (scrollRef.current) {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    // wheel/touch: pausa imediatamente, sem esperar distancia
+    const handleUserScrollIntent = (e) => {
+      const isScrollingUp =
+        (e.type === "wheel" && e.deltaY < 0) ||
+        e.type === "touchstart";
+      if (isScrollingUp) {
+        isAtBottomRef.current = false;
+      }
+    };
+
+    // scroll: reativa quando o usuario volta ao fundo manualmente
+    const handleScrollPosition = () => {
+      const threshold = 40;
+      const distanceFromBottom =
+        container.scrollHeight - container.scrollTop - container.clientHeight;
+      if (distanceFromBottom < threshold) {
+        isAtBottomRef.current = true;
+      }
+    };
+
+    container.addEventListener("wheel", handleUserScrollIntent, { passive: true });
+    container.addEventListener("touchstart", handleUserScrollIntent, { passive: true });
+    container.addEventListener("scroll", handleScrollPosition, { passive: true });
+
+    return () => {
+      container.removeEventListener("wheel", handleUserScrollIntent);
+      container.removeEventListener("touchstart", handleUserScrollIntent);
+      container.removeEventListener("scroll", handleScrollPosition);
+    };
+  }, [selectedAgent?.id]);
+
+  // Auto-scroll apenas se o usuario ja estava no fundo
+  useEffect(() => {
+    if (scrollRef.current && isAtBottomRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [selectedAgent?.messages, isLoading]);
@@ -570,6 +613,7 @@ export const ManProvider = ({ children }) => {
         isTranscribing,
         startRecording,
         stopRecording,
+        isAtBottomRef,
       }}
     >
       {children}
