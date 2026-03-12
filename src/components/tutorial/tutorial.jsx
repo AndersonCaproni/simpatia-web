@@ -182,7 +182,7 @@ const Tutorial = () => {
       preTop = targetRect.top;
       preLeft = targetRect.left + targetRect.width + 15;
       if (isMobile) {
-        preTop = targetRect.top + targetRect.height / 1.5;
+        preTop = targetRect.top + targetRect.height / 2;
         preLeft = padding;
       }
     } else if (stepInfo.position === "top") {
