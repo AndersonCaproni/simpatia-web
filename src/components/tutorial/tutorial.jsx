@@ -203,17 +203,17 @@ const Tutorial = () => {
         preLeft = padding;
       }
     } else if (stepInfo.position === "top") {
-      preTop = targetRect.top - tooltipHeight - 35;
+      preTop = targetRect.top - tooltipHeight - 55;
       preLeft = targetRect.left + (targetRect.width / 2) - (tooltipWidth / 2);
       if (isMobile) {
-        preTop = targetRect.top - tooltipHeight - 35;
+        preTop = targetRect.top - tooltipHeight - 60;
         preLeft = padding;
       }
     } else if (stepInfo.position === "top-left") {
-      preTop = targetRect.top - tooltipHeight - 35;
+      preTop = targetRect.top - tooltipHeight - 105;
       preLeft = targetRect.left + (targetRect.width / 2.5) - (tooltipWidth);
       if (isMobile) {
-        preTop = targetRect.top - tooltipHeight - 35;
+        preTop = targetRect.top - tooltipHeight - 80;
         preLeft = padding;
       }
     } else if (stepInfo.position === "bottom") {
@@ -269,7 +269,15 @@ const Tutorial = () => {
         className={`${styles.tooltip} ${isCenter ? styles.tooltipCenter : styles.tooltipAbsolute}`}
         style={!isCenter ? tooltipStyle : {}}
       >
-        <div className={styles.progress}>Passo {currentStep + 1} de {steps.length}</div>
+        <div className={styles.progressContainer}>
+          <div className={styles.progressText}>Passo {currentStep + 1} de {steps.length}</div>
+          <div className={styles.progressBarBg}>
+            <div 
+              className={styles.progressBarFill} 
+              style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+            />
+          </div>
+        </div>
         <h3>{stepInfo.title}</h3>
         <p>{stepInfo.content}</p>
 
