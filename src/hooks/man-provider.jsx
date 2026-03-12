@@ -256,7 +256,13 @@ export const ManProvider = ({ children }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const [isTutorialActive, setIsTutorialActive] = useState(false);
   const recognitionRef = useRef(null);
+
+  const startTutorial = () => {
+    setIsTutorialActive(true);
+    setIsExpanded(false); // fecha o menu no mobile ao iniciar
+  };
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 950);
@@ -614,6 +620,9 @@ export const ManProvider = ({ children }) => {
         startRecording,
         stopRecording,
         isAtBottomRef,
+        isTutorialActive,
+        setIsTutorialActive,
+        startTutorial,
       }}
     >
       {children}

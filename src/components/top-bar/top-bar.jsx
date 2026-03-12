@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Logo from "../../assets/logo.svg";
 import Unifenas from "../../assets/unifenas.png";
+import { Question } from "phosphor-react";
 import Button from "../button";
 import styles from "./top-bar.module.css";
 import ModuleIA from "../modules-ia/modules-ia";
@@ -12,7 +13,7 @@ const TopBar = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const { isExpanded, setIsExpanded } = useMan();
+  const { isExpanded, setIsExpanded, startTutorial } = useMan();
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuClosing, setMenuClosing] = useState(false);
 
@@ -69,6 +70,9 @@ const TopBar = () => {
           <div className={styles.nav}>
             <ModuleIA />
             <Button types="outline" onClick={() => window.open("https://simpatiaunifenas.web.app/about", "_blank")} >Sobre o Projeto</Button>
+            <Button types="outline" onClick={startTutorial} title="Rever Tutorial">
+              Tutorial
+            </Button>
           </div>
           <Button types="top" onClick={() => window.open("https://www.unifenas.br/", "_blank")} className={styles.btn}>
 
@@ -118,6 +122,9 @@ const TopBar = () => {
           <ModuleIA />
           <Button types="outline" className={styles.btnTop} onClick={() => window.open("https://simpatiaunifenas.web.app/about", "_blank")}>
             Sobre o Projeto
+          </Button>
+          <Button types="outline" className={styles.btnTop} onClick={() => { startTutorial(); closeMenu(); }}>
+            Tutorial
           </Button>
           <Button types="top" onClick={() => window.open("https://www.unifenas.br/", "_blank")} className={styles.btn}>
             <svg style={{ height: "20px", width: "20px" }} width="75" height="78" viewBox="0 0 75 78" fill="none" xmlns="http://www.w3.org/2000/svg">

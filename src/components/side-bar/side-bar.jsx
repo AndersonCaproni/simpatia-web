@@ -21,7 +21,7 @@ const SideBar = () => {
   return (
     <div ref={sidebarRef} className={`${styles.sidebar} ${isExpanded ? styles["sidebar-expanded"] : ""}`}>
       <div className={styles["sidebar-header"]}>Agentes {isExpanded && "Especializados"}</div>
-      <div className={styles["sidebar-content"]}>
+      <div id="sidebar-agents" className={styles["sidebar-content"]}>
         {agents?.map((agent, index) => {
           const isSelected = selectedAgent?.id === agent.id;
           return (

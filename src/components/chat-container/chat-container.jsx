@@ -170,7 +170,7 @@ const ChatContainer = () => {
             </div>
             {
               selectedAgent?.messages?.length <= 11 &&
-              <button className={styles.buttonTop} onClick={limparStorage}>
+              <button id="clear-chat-button" className={styles.buttonTop} onClick={limparStorage}>
                 <ArrowsCounterClockwise
                   size={isMobile ? 16 : 20}
                   color="white"
@@ -214,7 +214,12 @@ const ChatContainer = () => {
 
                     <small>{formatDate(msg.timestamp)}</small>
                     {isBot && (
-                      <div className={styles.messageActions}>
+                      <div 
+                         id={`msg-actions-${msg.id}`} 
+                         className={`${styles.messageActions} ${
+                           selectedAgent?.messages[selectedAgent.messages.length - 1].id === msg.id ? "last-bot-message-actions" : ""
+                         }`}
+                      >
                         {/* Botão de copiar */}
                         <button
                           className={styles.copyButton}
@@ -284,7 +289,7 @@ const ChatContainer = () => {
                   </div>
                   :
                   <>
-                    <div className={styles.inputBox}>
+                    <div id="chat-input-area" className={styles.inputBox}>
                       <textarea
                         ref={textareaRef}
                         value={inputValue}
@@ -316,6 +321,7 @@ const ChatContainer = () => {
                       {/* Botão de mic: aparece quando vazio OU quando está gravando/transcrevendo */}
                       {(!inputValue.trim() || isRecording || isTranscribing) && !isLoading && (
                         <button
+                          id="mic-button"
                           type="button"
                           onClick={isRecording ? stopRecording : startRecording}
                           disabled={isTranscribing}
