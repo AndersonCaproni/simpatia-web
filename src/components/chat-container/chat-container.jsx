@@ -129,10 +129,10 @@ const ChatContainer = () => {
 
   useEffect(() => {
     if (inputValue === "" && textareaRef.current) {
-      textareaRef.current.style.height = "36px";
+      textareaRef.current.style.height = isMobile ? "20px" : "24px";
       textareaRef.current.style.overflowY = "hidden";
     }
-  }, [inputValue, textareaRef]);
+  }, [inputValue, textareaRef, isMobile]);
 
   const handleCopy = async (id, text) => {
     try {
