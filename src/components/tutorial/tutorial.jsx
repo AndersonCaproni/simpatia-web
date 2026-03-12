@@ -5,7 +5,7 @@ import { useMan } from "../../hooks/man-provider";
 const steps = [
   {
     target: null, // Modal central
-    title: "Bem-vindo ao Ajuda AI! 👋",
+    title: "Bem-vindo ao Ajuda AI!",
     content: "Preparei um tour rápido para você conhecer todas as incríveis funcionalidades da nossa plataforma. Vamos lá?",
   },
   {
@@ -22,8 +22,8 @@ const steps = [
   },
   {
     target: "#mic-button",
-    title: "Gravação de Voz",
-    content: "Com preguiça de digitar? Clique aqui para falar diretamente com a IA usando o microfone do seu celular ou computador.",
+    title: "Gravação e Envio",
+    content: "Com preguiça de digitar? Clique aqui para falar diretamente com a IA usando o microfone do seu celular ou computador. Porém se preferir digitar, clique aqui para enviar sua mensagem.",
     position: "top-left",
   },
   {
@@ -40,7 +40,7 @@ const steps = [
   },
   {
     target: null,
-    title: "Tudo pronto! 🚀",
+    title: "Tudo pronto!",
     content: "Você já é um mestre no Ajuda AI. Escolha um especialista ao lado e comece a testar agora mesmo!",
   }
 ];
@@ -199,21 +199,21 @@ const Tutorial = () => {
       preTop = targetRect.top;
       preLeft = targetRect.left + targetRect.width + 15;
       if (isMobile) {
-        preTop = targetRect.top + targetRect.height + 15;
+        preTop = targetRect.top + targetRect.height / 1.5;
         preLeft = padding;
       }
     } else if (stepInfo.position === "top") {
       preTop = targetRect.top - tooltipHeight - 35;
       preLeft = targetRect.left + (targetRect.width / 2) - (tooltipWidth / 2);
       if (isMobile) {
-        preTop = targetRect.top - tooltipHeight - 15;
+        preTop = targetRect.top - tooltipHeight - 35;
         preLeft = padding;
       }
     } else if (stepInfo.position === "top-left") {
       preTop = targetRect.top - tooltipHeight - 35;
       preLeft = targetRect.left + (targetRect.width / 2.5) - (tooltipWidth);
       if (isMobile) {
-        preTop = targetRect.top - tooltipHeight - 15;
+        preTop = targetRect.top - tooltipHeight - 35;
         preLeft = padding;
       }
     } else if (stepInfo.position === "bottom") {
@@ -257,6 +257,9 @@ const Tutorial = () => {
 
   return (
     <div className={styles.tutorialWrapper}>
+      {/* Blocker invisível para impedir cliques no "furo" da tela */}
+      <div className={styles.clickBlocker} />
+      
       <div
         className={`${styles.overlay} ${isCenter ? styles.overlaySolid : ''}`}
         style={overlayStyle}

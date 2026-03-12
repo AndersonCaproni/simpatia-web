@@ -15,8 +15,18 @@
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.7);
-  pointer-events: auto;
+  pointer-events: none; /* Deixa o blocker lidar com os cliques */
   transition: clip-path 0.4s ease-in-out;
+}
+
+.clickBlocker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: auto; /* Bloqueia todos os cliques na tela inteira, inclusive no buraco */
 }
 
 .overlaySolid {
