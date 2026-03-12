@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Logo from "../../assets/logo.svg";
 import Unifenas from "../../assets/unifenas.png";
-import { Question } from "phosphor-react";
+import { CircleWavyQuestion, Question } from "phosphor-react";
 import Button from "../button";
 import styles from "./top-bar.module.css";
 import ModuleIA from "../modules-ia/modules-ia";
@@ -70,9 +70,6 @@ const TopBar = () => {
           <div className={styles.nav}>
             <ModuleIA />
             <Button types="outline" onClick={() => window.open("https://simpatiaunifenas.web.app/about", "_blank")} >Sobre o Projeto</Button>
-            <Button types="outline" onClick={startTutorial} title="Rever Tutorial">
-              Tutorial
-            </Button>
           </div>
           <Button types="top" onClick={() => window.open("https://www.unifenas.br/", "_blank")} className={styles.btn}>
 
