@@ -443,15 +443,16 @@ export const ManProvider = ({ children }) => {
 
   const handleSubmitRef = useRef(null);
 
-  const handleSubmit = async (e, overrideValue) => {
+  const handleSubmit = async (e, overrideValue, overrideAgent) => {
     e.preventDefault();
     if (isLoading) return;
     const textToSend = overrideValue ?? inputValue;
-    if (!selectedAgent || !textToSend.trim()) return;
+    const targetAgent = overrideAgent ?? selectedAgent;
+    if (!targetAgent || !textToSend.trim()) return;
 
     isAtBottomRef.current = true;
 
-    const agentId = selectedAgent.id;
+    const agentId = targetAgent.id;
 
     const userMessage = {
       id: `user-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
@@ -472,7 +473,9 @@ export const ManProvider = ({ children }) => {
     });
 
     setSelectedAgent((prev) =>
-      prev ? { ...prev, messages: [...prev.messages, userMessage] } : prev
+      prev && prev.id === agentId
+        ? { ...prev, messages: [...prev.messages, userMessage] }
+        : prev
     );
 
     setInputValue("");
@@ -480,8 +483,8 @@ export const ManProvider = ({ children }) => {
 
     try {
       const apiResponse = await ChatMensagem(
-        [...selectedAgent.messages, userMessage],
-        selectedAgent.specialties
+        [...targetAgent.messages, userMessage],
+        targetAgent.specialties
       );
 
       let botText = "";
@@ -511,7 +514,9 @@ export const ManProvider = ({ children }) => {
       });
 
       setSelectedAgent((prev) =>
-        prev ? { ...prev, messages: [...prev.messages, botResponse] } : prev
+        prev && prev.id === agentId
+          ? { ...prev, messages: [...prev.messages, botResponse] }
+          : prev
       );
     } catch (error) {
       console.error("Erro ao enviar/receber mensagem da IA:", error);
@@ -537,7 +542,7 @@ export const ManProvider = ({ children }) => {
       });
 
       setSelectedAgent((prev) =>
-        prev
+        prev && prev.id === agentId
           ? { ...prev, messages: [...prev.messages, errorBotResponse] }
           : prev
       );
@@ -554,6 +559,18 @@ export const ManProvider = ({ children }) => {
     const newHeight = Math.min(textarea.scrollHeight, maxHeight);
     textarea.style.height = `${newHeight}px`;
     textarea.style.overflowY = textarea.scrollHeight > maxHeight ? "auto" : "hidden";
+  };
+
+  const textareaChatBotRef = useRef(null);
+  const autoResizeChatBot = () => {
+    const textarea = textareaChatBotRef.current;
+    if (!textarea) return;
+    textarea.style.height = "auto";
+    const maxHeight = 240;
+    const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+    textarea.style.height = `${newHeight}px`;
+    textarea.style.overflowY =
+      textarea.scrollHeight > maxHeight ? "auto" : "hidden";
   };
 
   const isAtBottomRef = useRef(true);
@@ -661,6 +678,8 @@ export const ManProvider = ({ children }) => {
         setIsTutorialActive,
         startTutorial,
         endTutorial,
+        textareaChatBotRef,
+        autoResizeChatBot,
       }}
     >
       {children}

@@ -145,7 +145,10 @@
   border: 1px solid transparent;
   border-radius: 36px;
   padding: 8px 8px 8px 16px;
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   position: relative;
 }
 
@@ -211,6 +214,13 @@
   margin-left: 12px;
   flex-shrink: 0;
 }
+.containerBtn {
+  height: 100%;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  flex-shrink: 0;
+}
 
 .submitBtn:hover:not(:disabled) {
   background-color: var(--azul-escuro-03);
@@ -235,7 +245,9 @@
   background-color: #f0f0f0;
   color: var(--neutro-600, #444);
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
   margin-left: 8px;
   flex-shrink: 0;
 }
@@ -305,7 +317,6 @@
 }
 
 @keyframes micPulse {
-
   0%,
   100% {
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
@@ -317,7 +328,6 @@
 }
 
 @keyframes pulseDotAnim {
-
   0%,
   100% {
     opacity: 1;
@@ -367,7 +377,7 @@
   border-radius: 8px;
   padding: 16px;
   overflow-x: auto;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   white-space: pre;
   max-width: 100%;
 }
@@ -428,7 +438,6 @@
 }
 
 @keyframes speakPulse {
-
   0%,
   100% {
     background-color: transparent;
@@ -446,7 +455,6 @@
   font-size: 12px;
   color: #4caf50;
 }
-
 
 @keyframes spin {
   from {
@@ -469,7 +477,6 @@
 }
 
 @media (max-width: 950px) {
-
   .message .markdownContainer pre code {
     font-size: 10px !important;
   }
@@ -578,7 +585,6 @@
 }
 
 @keyframes bounce {
-
   0%,
   80%,
   100% {
