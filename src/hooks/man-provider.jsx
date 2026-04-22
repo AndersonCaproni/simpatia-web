@@ -259,7 +259,7 @@ export const ManProvider = ({ children }) => {
   const [isTutorialActive, setIsTutorialActive] = useState(false);
   const [backupState, setBackupState] = useState(null);
   const recognitionRef = useRef(null);
-  const [isOpenChatBot, setIsOpenChatBot] = useState(true);
+  const [isOpenChatBot, setIsOpenChatBot] = useState(false);
 
   const tutorialAgent = {
     id: "tutorial-ghost",
