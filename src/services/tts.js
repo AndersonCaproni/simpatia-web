@@ -2,45 +2,20 @@ import axios from "axios";
 
 export async function generateSpeech(text, voiceName = "Charon", existingAudioCtx = null) {
     const response = await axios.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent",
-        {
-            contents: [
-                {
-                    role: "user",
-                    parts: [{ text }],
-                },
-            ],
-            generationConfig: {
-                responseModalities: ["AUDIO"],
-                speechConfig: {
-                    voiceConfig: {
-                        prebuiltVoiceConfig: { voiceName },
-                    },
-                },
-            },
-        },
-        {
-            headers: {
-                "Content-Type": "application/json",
-                "x-goog-api-key": process.env.REACT_APP_GEMINI_API_KEY,
-            },
-        }
+        "https://simpatia-api-112480462744.europe-west1.run.app/speech",
+        { text, voiceName },
+        { headers: { "Content-Type": "application/json" } }
     );
 
+    const { data: base64, mimeType = "audio/L16;rate=24000" } = response.data;
 
-    const part = response.data?.candidates?.[0]?.content?.parts?.[0];
-    if (!part?.inlineData?.data) throw new Error("Resposta de áudio inválida");
-
-    const base64 = part.inlineData.data;
-    const mimeType = part.inlineData.mimeType || "audio/L16;rate=24000";
+    if (!base64) throw new Error("Resposta de áudio inválida");
 
     const binary = atob(base64);
     const buffer = new ArrayBuffer(binary.length);
     const view = new Uint8Array(buffer);
     for (let i = 0; i < binary.length; i++) view[i] = binary.charCodeAt(i);
 
-    const audioCtx = existingAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
-    
     if (mimeType.includes("L16") || mimeType.includes("pcm")) {
         const sampleRate = parseInt(mimeType.match(/rate=(\d+)/)?.[1] || "24000");
         const wavBlob = encodeWAV(buffer, sampleRate);
@@ -83,10 +58,10 @@ function writeString(view, offset, string) {
 export function playAudioObject(url, onEnd, existingAudioRef) {
     const audio = existingAudioRef && existingAudioRef.current ? existingAudioRef.current : new Audio();
     audio.src = url;
-    
+
     audio.onended = () => {
         if (onEnd) onEnd();
-        URL.revokeObjectURL(url); 
+        URL.revokeObjectURL(url);
     };
     audio.onerror = () => {
         if (onEnd) onEnd();

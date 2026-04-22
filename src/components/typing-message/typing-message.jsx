@@ -13,7 +13,6 @@ function TypingMessage({ content, speed = 0.4, onFinish, scrollRef, isAtBottomRe
     let index = 0;
 
     const scrollToBottom = () => {
-      // Só faz scroll automático se o usuário estiver no fundo
       if (scrollRef?.current && isAtBottomRef?.current !== false) {
         scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
       }
