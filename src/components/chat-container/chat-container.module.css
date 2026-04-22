@@ -115,7 +115,7 @@
 .inputAreaWrapper::after {
   content: "";
   position: absolute;
-  top: -35px;
+  top: -34px;
   left: 0;
   width: 100%;
   height: 35px;

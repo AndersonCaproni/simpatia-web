@@ -167,10 +167,12 @@ const ChatBot = () => {
     >
       <header className={styles.chatHeader}>
         <div className={styles.chatHeaderTitle}>
-          <BsRobot size={22} color="#006FFF" weight="fill" />
+          <div className={styles.iconHeader}>
+            <BsRobot size={22} color="#006FFF" weight="fill" />
+          </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
             <strong>Ajuda AI</strong>
-            <span style={{ display: "block", fontSize: isMobile? 9 : 12, color: "#666" }}>
+            <span style={{ display: "block", fontSize: isMobile ? 9 : 12, color: "#666" }}>
               Tire suas dúvidas sobre a plataforma ou seja encaminhado a um
               especialista
             </span>
