@@ -94,6 +94,15 @@ const Tutorial = () => {
   const [vpSize, setVpSize] = useState({ w: window.innerWidth, h: window.innerHeight });
 
   useEffect(() => {
+    if (isVisible) {
+      document.body.classList.add('tutorial-active');
+    } else {
+      document.body.classList.remove('tutorial-active');
+    }
+    return () => document.body.classList.remove('tutorial-active');
+  }, [isVisible]);
+
+  useEffect(() => {
     if (isTutorialActive) {
       setCurrentStep(0);
       setIsVisible(true);
@@ -180,10 +189,6 @@ const Tutorial = () => {
   useEffect(() => {
     if (currentStep === 6) {
       setIsOpenBarra(true);
-      const timer = setTimeout(() => {
-        calculatePosition();
-      }, 600);
-      return () => clearTimeout(timer);
     } else {
       setIsOpenBarra(false);
     }
@@ -192,14 +197,10 @@ const Tutorial = () => {
   useEffect(() => {
     if (currentStep > 6 && currentStep < 11) {
       setIsOpenChatBot(true);
-      const timer = setTimeout(() => {
-        calculatePosition();
-      }, 600);
-      return () => clearTimeout(timer);
     } else {
       setIsOpenChatBot(false);
     }
-  }, [currentStep, setIsOpenChatBot, calculatePosition]);
+  }, [currentStep]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -213,16 +214,20 @@ const Tutorial = () => {
 
     const options = { capture: true, passive: false };
 
+    window.addEventListener('mousedown', blockEvent, options);
+    window.addEventListener('mouseup', blockEvent, options);
+    window.addEventListener('click', blockEvent, options);
     window.addEventListener('touchstart', blockEvent, options);
     window.addEventListener('touchmove', blockEvent, options);
     window.addEventListener('touchend', blockEvent, options);
-    window.addEventListener('click', blockEvent, options);
 
     return () => {
+      window.removeEventListener('mousedown', blockEvent, options);
+      window.removeEventListener('mouseup', blockEvent, options);
+      window.removeEventListener('click', blockEvent, options);
       window.removeEventListener('touchstart', blockEvent, options);
       window.removeEventListener('touchmove', blockEvent, options);
       window.removeEventListener('touchend', blockEvent, options);
-      window.removeEventListener('click', blockEvent, options);
     };
   }, [isVisible]);
 
