@@ -223,7 +223,7 @@ const NotFound = () => {
 
           <button className="nf-btn" onClick={() => window.history.back()}>
             <div className="nf-btn-shine" />
-            <span className="nf-btn-text">← Voltar</span>
+            <span className="nf-btn-text">Voltar</span>
           </button>
         </div>
       </div>

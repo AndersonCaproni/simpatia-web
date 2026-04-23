@@ -42,8 +42,23 @@ const getStorage = (name) => {
 };
 
 export const ManProvider = ({ children }) => {
+  const introMessages = [
+    {
+      id: "ajudaai-intro",
+      type: "bot",
+      content:
+        "Olá! Eu sou o Ajuda AI, assistente de navegação da Simpatia. Posso explicar o propósito da plataforma, seus recursos e como usá-la.",
+    },
+    {
+      id: "ajudaai-intro-2",
+      type: "bot",
+      content:
+        "Se você tiver uma dúvida específica sobre uma matéria, é só me perguntar, eu te encaminho para o agente especialista responsável.",
+    },
+  ];
   const [value, setValue] = useState("Ola");
   const [selectedAgent, setSelectedAgent] = useState(null);
+  const [isOpenBarra, setIsOpenBarra] = useState(false);
   const [agents, setAgents] = useState([
     {
       id: "general",
@@ -247,7 +262,9 @@ export const ManProvider = ({ children }) => {
       messages: [],
     },
   ]);
+  const [inputChatBot, setInputChatBot] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [messagesChatBot, setMessagesChatBot] = useState(introMessages);
   const [isLoading, setIsLoading] = useState(false);
   const textareaRef = useRef(null);
   const scrollRef = useRef(null);
@@ -283,11 +300,15 @@ export const ManProvider = ({ children }) => {
     setBackupState({
       agent: selectedAgent,
       input: inputValue,
-      isExpanded: isExpanded
+      inputBot: inputChatBot,
+      isExpanded: isExpanded,
+      messageBot: messagesChatBot
     });
 
     setInputValue("");
+    setInputChatBot("")
     setSelectedAgent(tutorialAgent);
+    setMessagesChatBot(introMessages)
 
     setIsTutorialActive(true);
     setIsExpanded(false);
@@ -296,10 +317,13 @@ export const ManProvider = ({ children }) => {
   const endTutorial = () => {
     setIsTutorialActive(false);
     setIsExpanded(false);
+    setIsOpenBarra(false);
 
     if (backupState) {
       setSelectedAgent(backupState.agent);
       setInputValue(backupState.input);
+      setInputChatBot(backupState.inputBot)
+      setMessagesChatBot(backupState.messageBot)
       setBackupState(null);
     } else {
       setSelectedAgent(null);
@@ -650,6 +674,8 @@ export const ManProvider = ({ children }) => {
         value,
         setValue,
         agents,
+        inputChatBot,
+        setInputChatBot,
         handleAgentSelect,
         selectedAgent,
         scrollRef,
@@ -677,6 +703,11 @@ export const ManProvider = ({ children }) => {
         endTutorial,
         textareaChatBotRef,
         autoResizeChatBot,
+        isOpenBarra,
+        setIsOpenBarra,
+        introMessages,
+        messagesChatBot,
+        setMessagesChatBot
       }}
     >
       {children}

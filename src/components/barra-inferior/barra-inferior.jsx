@@ -6,8 +6,7 @@ import { BsRobot  } from "react-icons/bs";
 import { FaQuestion } from "react-icons/fa";
 
 const BarraInferior = () => {
-  const { isMobile, startTutorial, setIsOpenChatBot } = useMan();
-  const [isOpen, setIsOpen] = useState(false);
+  const { isMobile, startTutorial, setIsOpenChatBot, isOpenBarra, setIsOpenBarra } = useMan();
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -15,13 +14,13 @@ const BarraInferior = () => {
       if (
         containerRef.current &&
         !containerRef.current.contains(event.target) &&
-        isOpen
+        isOpenBarra
       ) {
-        setIsOpen(false);
+        setIsOpenBarra(false);
       }
     };
 
-    if (isOpen) {
+    if (isOpenBarra) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -30,22 +29,23 @@ const BarraInferior = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpenBarra]);
 
 
   return (
     <div
       ref={containerRef}
-      className={`${styles.container} ${isOpen ? styles.open : styles.closed}`}
+      id="barra-inferior"
+      className={`${styles.container} ${isOpenBarra ? styles.open : styles.closed}`}
     >
-      <div className={styles.handleSection} onClick={() => setIsOpen(!isOpen)}>
-        <CaretUp size={18} weight="bold" className={`${styles.arrowIcon} ${isOpen ? styles.arrowDown : ""}`} />
+      <div className={styles.handleSection} onClick={() => setIsOpenBarra(!isOpenBarra)}>
+        <CaretUp size={18} weight="bold" className={`${styles.arrowIcon} ${isOpenBarra ? styles.arrowDown : ""}`} />
       </div>
       <div className={styles.content}>
-        <button className={styles.btn} onClick={() => { setIsOpen(false); startTutorial(); }} >
+        <button className={styles.btn} onClick={() => { setIsOpenBarra(false); startTutorial(); }} >
           <FaQuestion  size={18} weight="bold" />
         </button>
-        <button className={styles.btn} onClick={() => { setIsOpen(false); setIsOpenChatBot(true) }} >
+        <button className={styles.btn} onClick={() => { setIsOpenBarra(false); setIsOpenChatBot(true) }} >
           <BsRobot size={22} />
         </button>
       </div>

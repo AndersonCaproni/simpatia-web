@@ -5,51 +5,89 @@ import { useMan } from "../../hooks/man-provider";
 const GAP = 8;
 const RADIUS = 12;
 
-const steps = [
-  {
-    target: null,
-    title: "Bem-vindo ao Ajuda AI!",
-    content: "Preparei um tour rápido para você conhecer todas as incríveis funcionalidades da nossa plataforma. Vamos lá?",
-  },
-  {
-    target: "#sidebar-agents",
-    title: "Especialistas em IA",
-    content: "Aqui você encontra nossa equipe de IAs especialistas. Cada um domina uma área diferente: Exatas, Humanas, Programação e muito mais!",
-    position: "right",
-  },
-  {
-    target: "#chat-input-area",
-    title: "Caixa de Mensagens",
-    content: "É por aqui que você conversa! Digite suas dúvidas, peca resumos ou explique o problema que você precisa resolver.",
-    position: "top",
-  },
-  {
-    target: "#mic-button",
-    title: "Gravação e Envio",
-    content: "Com preguiça de digitar? Clique aqui para falar diretamente com a IA usando o microfone do seu celular ou computador. Porém se preferir digitar, clique aqui para enviar sua mensagem.",
-    position: "top-left",
-  },
-  {
-    target: "#clear-chat-button",
-    title: "Limpar a Conversa",
-    content: "Apertando aqui, você apaga as mensagens e começa um papo novo do zero com o mesmo agente.",
-    position: "bottom",
-  },
-  {
-    target: ".last-bot-message-actions",
-    title: "Lendo e Copiando",
-    content: "Sempre que a IA responder, você verá dois botões embaixo da mensagem dela: um para copiar o texto (útil para provas!) e outro para ouvir a resposta.",
-    position: "bottom-center",
-  },
-  {
-    target: null,
-    title: "Tudo pronto!",
-    content: "Você já é um mestre no Ajuda AI. Escolha um especialista ao lado e comece a testar agora mesmo!",
-  }
-];
-
 const Tutorial = () => {
-  const { isMobile, isTutorialActive, setIsTutorialActive, setIsExpanded, endTutorial, startTutorial } = useMan();
+  const {
+    isMobile,
+    isTutorialActive,
+    setIsTutorialActive,
+    setIsExpanded,
+    endTutorial,
+    startTutorial,
+    setIsOpenBarra,
+    setIsOpenChatBot
+  } = useMan();
+  const steps = [
+    {
+      target: null,
+      title: "Bem-vindo ao Ajuda AI!",
+      content: "Preparei um tour rápido para você conhecer todas as incríveis funcionalidades da nossa plataforma. Vamos lá?",
+    },
+    {
+      target: "#sidebar-agents",
+      title: "Especialistas em IA",
+      content: "Aqui você encontra nossa equipe de IAs especialistas. Cada um domina uma área diferente: Exatas, Humanas, Programação e muito mais!",
+      position: "right",
+    },
+    {
+      target: "#chat-input-area",
+      title: "Caixa de Mensagens",
+      content: "É por aqui que você conversa! Digite suas dúvidas, peca resumos ou explique o problema que você precisa resolver.",
+      position: "top",
+    },
+    {
+      target: "#mic-button",
+      title: "Gravação e Envio",
+      content: "Com preguiça de digitar? Clique aqui para falar diretamente com a IA usando o microfone do seu celular ou computador. Porém se preferir digitar, clique aqui para enviar sua mensagem.",
+      position: "top-left",
+    },
+    {
+      target: "#clear-chat-button",
+      title: "Limpar a Conversa",
+      content: "Apertando aqui, você apaga as mensagens e começa um papo novo do zero com o mesmo agente.",
+      position: "bottom",
+    },
+    {
+      target: ".last-bot-message-actions",
+      title: "Lendo e Copiando",
+      content: "Sempre que a IA responder, você verá dois botões embaixo da mensagem dela: um para copiar o texto (útil para provas!) e outro para ouvir a resposta.",
+      position: "bottom-center",
+    },
+    {
+      target: "#barra-inferior",
+      title: "Tutorial e Suporte",
+      content: "Aqui você encontra toda ajuda necessária para navegar pelo sistema. Podendo rever todo tutorial, ou tirar sua dúvida sobre algo dentro do Ajuda Ai.",
+      position: "top-left",
+    },
+    {
+      target: "#chat-bot-container",
+      title: "ChatBot Ajuda Ai",
+      content: "Selecionando o Ajuda Ai, você sera direcionado para este novo chat de mensagens. Aqui você poderá tirar suas dúvidas sobr o sistema.",
+      position: "center",
+    },
+    {
+      target: "#sugestoes-chat-bot",
+      title: "Tire sua Dúvida",
+      content: "Ao iniciar, serão exibidas algumas sugestões de perguntas pré-definidas.",
+      position: "top-center",
+    },
+    {
+      target: "#chat-bot-input",
+      title: "Área da Pergunta",
+      content: "Neste campo, você pode inserir suas dúvidas. Digite sua pergunta para que possamos solucioná-la o mais rápido possível.",
+      position: "top-center-alto",
+    },
+    {
+      target: "#button-sair-chat-bot",
+      title: "Sair e Navegar",
+      content: `Ao clicar neste botão${!isMobile ? ' ou em qualquer parte da tela' : ''}, o chatbot será fechado e você poderá continuar navegando pelos nossos agentes de IA.`,
+      position: "bottom",
+    },
+    {
+      target: null,
+      title: "Tudo pronto!",
+      content: "Você já é um mestre no Ajuda AI. Escolha um especialista ao lado e comece a testar agora mesmo!",
+    }
+  ];
   const [currentStep, setCurrentStep] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [targetRect, setTargetRect] = useState(null);
@@ -139,6 +177,55 @@ const Tutorial = () => {
     };
   }, [calculatePosition]);
 
+  useEffect(() => {
+    if (currentStep === 6) {
+      setIsOpenBarra(true);
+      const timer = setTimeout(() => {
+        calculatePosition();
+      }, 600);
+      return () => clearTimeout(timer);
+    } else {
+      setIsOpenBarra(false);
+    }
+  }, [currentStep, setIsOpenBarra, calculatePosition]);
+
+  useEffect(() => {
+    if (currentStep > 6 && currentStep < 11) {
+      setIsOpenChatBot(true);
+      const timer = setTimeout(() => {
+        calculatePosition();
+      }, 600);
+      return () => clearTimeout(timer);
+    } else {
+      setIsOpenChatBot(false);
+    }
+  }, [currentStep, setIsOpenChatBot, calculatePosition]);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const blockEvent = (e) => {
+      const isInsideButton = e.target.closest('.tutorial-btn');
+      if (isInsideButton) return;
+      e.stopPropagation();
+      e.preventDefault();
+    };
+
+    const options = { capture: true, passive: false };
+
+    window.addEventListener('touchstart', blockEvent, options);
+    window.addEventListener('touchmove', blockEvent, options);
+    window.addEventListener('touchend', blockEvent, options);
+    window.addEventListener('click', blockEvent, options);
+
+    return () => {
+      window.removeEventListener('touchstart', blockEvent, options);
+      window.removeEventListener('touchmove', blockEvent, options);
+      window.removeEventListener('touchend', blockEvent, options);
+      window.removeEventListener('click', blockEvent, options);
+    };
+  }, [isVisible]);
+
   if (!isVisible) return null;
 
   const stepInfo = steps[currentStep];
@@ -185,6 +272,20 @@ const Tutorial = () => {
         preTop = targetRect.top - tooltipHeight - 80;
         preLeft = padding;
       }
+    } else if (stepInfo.position === "top-center") {
+      preTop = targetRect.top - tooltipHeight - 55;
+      preLeft = targetRect.left + (targetRect.width / 2) - tooltipWidth / 1.7;
+      if (isMobile) {
+        preTop = targetRect.top - tooltipHeight - 30;
+        preLeft = padding;
+      }
+    } else if (stepInfo.position === "top-center-alto") {
+      preTop = targetRect.top - tooltipHeight - 85;
+      preLeft = targetRect.left + (targetRect.width / 2) - tooltipWidth / 1.7;
+      if (isMobile) {
+        preTop = targetRect.top - tooltipHeight - 50;
+        preLeft = padding;
+      }
     } else if (stepInfo.position === "bottom") {
       preTop = targetRect.top + targetRect.height + 25;
       preLeft = targetRect.left + (targetRect.width / 2) - (tooltipWidth * 1.2);
@@ -192,6 +293,10 @@ const Tutorial = () => {
     } else if (stepInfo.position === "bottom-center") {
       preTop = targetRect.top + targetRect.height + 25;
       preLeft = targetRect.left + (targetRect.width / 2) - tooltipWidth;
+      if (isMobile) preLeft = padding;
+    } else if (stepInfo.position === "center") {
+      preTop = targetRect.top + targetRect.height / 2 - tooltipHeight / 2;
+      preLeft = targetRect.left + (targetRect.width / 2) - tooltipWidth / 1.75;
       if (isMobile) preLeft = padding;
     } else {
       preTop = targetRect.top + targetRect.height + 15;
@@ -216,7 +321,12 @@ const Tutorial = () => {
 
   return (
     <div className={styles.tutorialWrapper}>
-      <div className={styles.clickBlocker} />
+      <div
+        className={styles.clickBlocker}
+        onTouchStart={e => e.stopPropagation()}
+        onTouchMove={e => { e.stopPropagation(); e.preventDefault(); }}
+        onTouchEnd={e => e.stopPropagation()}
+      />
 
       {isCenter ? (
         <div className={styles.overlaySolid} />
@@ -282,10 +392,10 @@ const Tutorial = () => {
         <p>{stepInfo.content}</p>
 
         <div className={styles.actions}>
-          <button className={styles.skipBtn} onClick={completeTutorial}>Pular tutorial</button>
+          <button className={`${styles.skipBtn} tutorial-btn`} onClick={completeTutorial}>Pular tutorial</button>
           <div className={styles.navRow}>
-            {currentStep > 0 && <button className={styles.navBtn} onClick={prevStep}>Anterior</button>}
-            <button className={styles.nextBtn} onClick={nextStep}>
+            {currentStep > 0 && <button className={`${styles.navBtn} tutorial-btn`} onClick={prevStep}>Anterior</button>}
+            <button className={`${styles.nextBtn} tutorial-btn`} onClick={nextStep}>
               {currentStep === steps.length - 1 ? "Começar!" : "Próximo"}
             </button>
           </div>

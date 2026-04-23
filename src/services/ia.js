@@ -16,8 +16,6 @@ export async function ChatMensagem(pergunta, specialties) {
       }
     );
 
-    console.log("Resposta bruta da API:", response);
-
     if (!response.data || !response.data.resposta) {
       console.error("Resposta da API em formato inesperado:", response.data);
       throw new Error("Resposta inválida da API");

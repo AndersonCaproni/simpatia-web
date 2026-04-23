@@ -5,21 +5,6 @@ import { useMan } from "../../hooks/man-provider";
 import { AjudaAIMensagem } from "../../services/ia";
 import styles from "./chat-bot.module.css";
 
-const INTRO_MESSAGES = [
-  {
-    id: "ajudaai-intro",
-    type: "bot",
-    content:
-      "Olá! Eu sou o Ajuda AI, assistente de navegação da Simpatia. Posso explicar o propósito da plataforma, seus recursos e como usá-la.",
-  },
-  {
-    id: "ajudaai-intro-2",
-    type: "bot",
-    content:
-      "Se você tiver uma dúvida específica sobre uma matéria, é só me perguntar, eu te encaminho para o agente especialista responsável.",
-  },
-];
-
 const SUGESTOES = [
   "Para que o Simpatia foi criado?",
   "Como envio uma pergunta?",
@@ -36,13 +21,15 @@ const ChatBot = () => {
     handleAgentSelect,
     handleSubmit,
     textareaChatBotRef,
+    introMessages,
+    inputChatBot,
+    setInputChatBot,
+    messagesChatBot,
+    setMessagesChatBot
   } = useMan();
 
   const chatRef = useRef(null);
   const messagesRef = useRef(null);
-
-  const [messages, setMessages] = useState(INTRO_MESSAGES);
-  const [input, setInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
@@ -69,7 +56,7 @@ const ChatBot = () => {
 
   useEffect(() => {
     scrollMessages()
-  }, [messages, isProcessing]);
+  }, [messagesChatBot, isProcessing]);
 
   useEffect(() => {
     scrollMessages();
@@ -82,18 +69,18 @@ const ChatBot = () => {
   };
 
   useEffect(() => {
-    if (input === "" && textareaChatBotRef?.current) {
+    if (inputChatBot === "" && textareaChatBotRef?.current) {
       textareaChatBotRef.current.style.height = isMobile ? "20px" : "24px";
       textareaChatBotRef.current.style.overflowY = "hidden";
     }
-  }, [input, textareaChatBotRef, isMobile]);
+  }, [inputChatBot, textareaChatBotRef, isMobile]);
 
   const sendQuestion = async (text) => {
     const trimmed = text.trim();
     if (!trimmed || isProcessing) return;
 
-    setInput("");
-    setMessages((prev) => [
+    setInputChatBot("");
+    setMessagesChatBot((prev) => [
       ...prev,
       { id: `u-${Date.now()}`, type: "user", content: trimmed },
     ]);
@@ -106,7 +93,7 @@ const ChatBot = () => {
     if (result.tipo === "rotear" && result.agente) {
       const agent = agents.find((a) => a.id === result.agente);
       if (agent) {
-        setMessages((prev) => [
+        setMessagesChatBot((prev) => [
           ...prev,
           {
             id: `b-${Date.now()}`,
@@ -123,7 +110,7 @@ const ChatBot = () => {
       }
     }
 
-    setMessages((prev) => [
+    setMessagesChatBot((prev) => [
       ...prev,
       {
         id: `b-${Date.now()}`,
@@ -146,22 +133,23 @@ const ChatBot = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    sendQuestion(input);
+    sendQuestion(inputChatBot);
   };
 
   const onKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      sendQuestion(input);
+      sendQuestion(inputChatBot);
     }
   };
 
   const showSugestoes =
-    messages.length === INTRO_MESSAGES.length && !isProcessing;
+    messagesChatBot.length === introMessages.length && !isProcessing;
 
   return (
     <div
       ref={chatRef}
+      id='chat-bot-container'
       className={`${styles.container} ${isOpenChatBot ? styles.open : styles.closed
         }`}
     >
@@ -179,14 +167,14 @@ const ChatBot = () => {
           </div>
         </div>
 
-        <button className={styles.closeBtn} onClick={() => setIsOpenChatBot(false)}>
+        <button id='button-sair-chat-bot' className={styles.closeBtn} onClick={() => setIsOpenChatBot(false)}>
           <X size={20} />
         </button>
       </header>
 
       <div ref={messagesRef} className={styles.messages}>
         <div className={styles.messagesInner}>
-          {messages.map((m) => (
+          {messagesChatBot.map((m) => (
             <div
               key={m.id}
               className={`${styles.message} ${m.type === "user" ? styles.messageuser : styles.messagebot
@@ -208,7 +196,7 @@ const ChatBot = () => {
           ))}
 
           {showSugestoes && (
-            <div className={styles.chipsRow}>
+            <div id='sugestoes-chat-bot' className={styles.chipsRow}>
               {SUGESTOES.map((s) => (
                 <button
                   key={s}
@@ -239,15 +227,15 @@ const ChatBot = () => {
 
       <div className={styles.inputAreaWrapper}>
         <form className={styles.inputArea} onSubmit={onSubmit}>
-          <div className={styles.inputBox}>
+          <div id="chat-bot-input" className={styles.inputBox}>
             <textarea
               ref={textareaChatBotRef}
               placeholder="Pergunte algo ..."
               rows={1}
               className={styles.textarea}
-              value={input}
+              value={inputChatBot}
               onChange={(e) => {
-                setInput(e.target.value);
+                setInputChatBot(e.target.value);
                 autoResizeChatBot();
               }}
               onKeyDown={onKeyDown}
@@ -258,7 +246,7 @@ const ChatBot = () => {
               <button
                 type="submit"
                 className={styles.submitBtn}
-                disabled={isProcessing || !input.trim()}
+                disabled={isProcessing || !inputChatBot.trim()}
               >
                 <PaperPlaneRight size={18} weight="fill" />
               </button>
