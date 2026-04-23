@@ -69,7 +69,7 @@ const TopBar = () => {
           <img src={Logo} alt="Logo" className={styles.logo} onClick={() => window.open("https://simpatiaunifenas.web.app", "_blank")} />
           <div className={styles.nav}>
             <ModuleIA />
-            <Button types="outline" onClick={() => window.open("https://simpatiaunifenas.web.app/about", "_blank")} >Sobre o Projeto</Button>
+            <Button types="outline" onClick={() => window.open("https://simpatiaunifenas.web.app/features/7", "_blank")} >Sobre o Projeto</Button>
           </div>
           <Button types="top" onClick={() => window.open("https://www.unifenas.br/", "_blank")} className={styles.btn}>
 
@@ -117,7 +117,7 @@ const TopBar = () => {
       {(menuOpen || menuClosing) && isMobile && (
         <div ref={dropdownRef} className={`${styles.dropdown} ${menuClosing ? styles.dropdownClosing : ""}`}>
           <ModuleIA />
-          <Button types="outline" className={styles.btnTop} onClick={() => window.open("https://simpatiaunifenas.web.app/about", "_blank")}>
+          <Button types="outline" className={styles.btnTop} onClick={() => window.open("https://simpatiaunifenas.web.app/features/7", "_blank")}>
             Sobre o Projeto
           </Button>
           <Button types="top" onClick={() => window.open("https://www.unifenas.br/", "_blank")} className={styles.btn}>

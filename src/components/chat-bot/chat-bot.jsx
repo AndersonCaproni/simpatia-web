@@ -16,7 +16,7 @@ const INTRO_MESSAGES = [
     id: "ajudaai-intro-2",
     type: "bot",
     content:
-      "Se você tiver uma dúvida específica sobre uma matéria, é só me perguntar — eu te encaminho para o agente especialista responsável.",
+      "Se você tiver uma dúvida específica sobre uma matéria, é só me perguntar, eu te encaminho para o agente especialista responsável.",
   },
 ];
 
