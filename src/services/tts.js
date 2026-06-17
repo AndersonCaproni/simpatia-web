@@ -2,7 +2,7 @@ import axios from "axios";
 
 export async function generateSpeech(text, voiceName = "Charon", existingAudioCtx = null) {
     const response = await axios.post(
-        "https://simpatia-api-112480462744.europe-west1.run.app/speech",
+        `${process.env.REACT_APP_API_URL}/speech`,
         { text, voiceName },
         { headers: { "Content-Type": "application/json" } }
     );

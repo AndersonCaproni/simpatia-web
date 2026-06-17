@@ -4,7 +4,7 @@ import { MANUAL_SIMPATIA } from "../data/manual-simpatia";
 export async function ChatMensagem(pergunta, specialties) {
   try {
     const response = await axios.post(
-      "https://simpatia-api-112480462744.europe-west1.run.app/chat",
+      `${process.env.REACT_APP_API_URL}/chat`,
       {
         pergunta, 
         specialties
@@ -32,7 +32,7 @@ export async function ChatMensagem(pergunta, specialties) {
 export async function AjudaAIMensagem(pergunta, agents) {
   try {
     const response = await axios.post(
-      "https://simpatia-api-112480462744.europe-west1.run.app/ajuda-ai",
+      `${process.env.REACT_APP_API_URL}/ajuda-ai`,
       { pergunta, agents },
       { headers: { "Content-Type": "application/json" } }
     );
