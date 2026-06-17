@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - run: npm ci
+      - run: npm install
       
       - run: CI=false npm run build
 
