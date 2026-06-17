@@ -3,7 +3,7 @@ import { MANUAL_SIMPATIA } from "../data/manual-simpatia";
 
 export async function ChatMensagem(pergunta, specialties) {
   try {
-    const response = await axios.post(
+    const response = await axios.post( 
       `${process.env.REACT_APP_API_URL}/chat`,
       {
         pergunta, 
